@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-@Entity
+@Entity(name = "users")
 @Data
 @Accessors(chain = true)
 public class User {

@@ -3,10 +3,8 @@
 <body>
 
 <nav class="navbar" role="navigation" aria-label="main navigation" th:fragment="nav">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="https://bulma.io">
-      <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
-    </a>
+  <div class="navbar-item">
+    <span sec:authorize="isAuthenticated()" sec:authentication="name" class="tag is-info p-3">Bob</span>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
       <span aria-hidden="true"></span>
@@ -57,7 +55,6 @@
           <a class="button is-light" sec:authorize="!isAuthenticated()" th:href="@{/login}">
             Log in
           </a>
-          <span sec:authorize="isAuthenticated()" sec:authentication="name" class="card">Bob</span>
           <a class="button is-warning" sec:authorize="isAuthenticated()" th:href="@{/logout}">
             Log out
           </a>
