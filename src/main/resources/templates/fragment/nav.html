@@ -19,28 +19,23 @@
         Home
       </a>
 
-      <a class="navbar-item" th:href="@{/courses}">
-        Courses
-      </a>
-
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">
-          More
+          Course
         </a>
 
         <div class="navbar-dropdown">
-          <a class="navbar-item">
-            About
+          <a class="navbar-item" th:href="@{/course/list}">
+            All courses
           </a>
-          <a class="navbar-item">
-            Jobs
+          <a class="navbar-item" th:href="@{/course/mine}">
+            My courses
           </a>
-          <a class="navbar-item">
-            Contact
+          <a class="navbar-item" th:href="@{/course/apply}">
+            Apply to a course
           </a>
-          <hr class="navbar-divider">
-          <a class="navbar-item">
-            Report an issue
+          <a class="navbar-item" th:href="@{/course/new}" sec:authorize="isAuthenticated() && hasRole('ROLE_TEACHER')">
+            New course
           </a>
         </div>
       </div>

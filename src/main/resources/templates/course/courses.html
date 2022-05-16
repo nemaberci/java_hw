@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Courses</title>
+</head>
+<body>
+
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container p-6">
+
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+
+        <thead>
+
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Capacity
+            </th>
+            <th>
+                Open spaces
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <tr th:each="course : ${courses}" th:id="|course-${course.id}|">
+            <td th:text="${course.name}">
+                Mathematics 1
+            </td>
+            <td th:text="${course.description}">
+                Good subject
+            </td>
+            <td th:text="${course.capacity}">
+                100
+            </td>
+            <td th:text="(${course.capacity} - ${course.studentIds.size()})"
+                th:id="|course-capacity-${course.id}|">
+                10
+            </td>
+            <td>
+                <button class="button is-success" th:id="|course-apply-student-${course.id}|"
+                        th:style="|display: ${course.studentIds.contains(userId)? 'none' : 'inline-flex'}|"
+                        th:onclick="|applyToCourse('student', ${course.id})|">Apply (Student)
+                </button>
+                <button class="button is-danger" th:id="|course-leave-student-${course.id}|"
+                        th:style="|display: ${course.studentIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|leaveCourse('student', ${course.id})|">Leave (Student)
+                </button>
+                <button class="button is-success" th:id="|course-apply-teacher-${course.id}|"
+                        th:style="|display: ${course.teacherIds.contains(userId)? 'none' : 'inline-flex'}|"
+                        th:onclick="|applyToCourse('teacher', ${course.id})|">Apply (Teacher)
+                </button>
+                <button class="button is-danger" th:id="|course-leave-teacher-${course.id}|"
+                        th:style="|display: ${course.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|leaveCourse('teacher', ${course.id})|">Leave (Teacher)
+                </button>
+                <button class="button is-info" th:if="${course.teacherIds.contains(userId)}"
+                        th:onclick="|updateCourse(${course.id})|">Update
+                </button>
+                <button class="button is-danger" th:if="${course.teacherIds.contains(userId)}"
+                        th:onclick="|deleteCourse(${course.id})|">Delete
+                </button>
+                <button class="button is-primary js-modal-trigger"
+                        th:id="|add-student-${course.id}|"
+                        th:style="|display: ${course.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|addStudent(${course.id})|">Add student
+                </button>
+                <button class="button is-warning js-modal-trigger"
+                        th:id="|remove-student-${course.id}|"
+                        th:style="|display: ${course.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|removeStudent(${course.id})|">Remove student
+                </button>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/stomp-js/stomp-websocket/lib/stomp.js"></script>
+<script type="text/javascript" th:src="@{/js/courses.js}"></script>
+
+</body>
+</html>

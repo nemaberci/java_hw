@@ -4,12 +4,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Entity
 @Data
-public class ExamResult {
+@Accessors(chain = true)
+public class ExamResultEntity {
 
     @GeneratedValue
     @Id
@@ -21,7 +23,13 @@ public class ExamResult {
     @Column
     private Integer points;
 
-    @OneToOne(mappedBy = "result")
-    private Exam exam;
+    @ManyToOne
+    private ExamEntity exam;
+
+    @ManyToOne
+    private UserEntity student;
+
+    @ManyToOne
+    private UserEntity teacher;
 
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title th:text="${remove ? 'Remove student' : 'Add student'}">Add or remove students</title>
+</head>
+<body>
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container is-fullwidth is-fullheight p-6">
+
+
+    <h2 th:text="${remove ? 'Remove student' : 'Add student'}">Add or remove students</h2>
+
+    <div class="select py-4 is-fullwidth">
+        <form method="post">
+
+            <div class="field has-addons">
+                <div class="control px-3 is-expanded">
+                    <div class="select is-fullwidth">
+                        <select name="student">
+                            <option th:each="user : ${users}"
+                                    th:text="${user.neptunCode}" th:value="${user.id}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-primary" th:text="${remove ? 'Remove' : 'Add'}">Choose</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+
+</body>
+</html>

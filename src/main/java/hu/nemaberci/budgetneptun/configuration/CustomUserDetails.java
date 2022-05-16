@@ -1,8 +1,7 @@
 package hu.nemaberci.budgetneptun.configuration;
 
-import hu.nemaberci.budgetneptun.entity.User;
+import hu.nemaberci.budgetneptun.entity.UserEntity;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,27 +9,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+    private final UserEntity userEntity;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
+    public CustomUserDetails(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles()
+        return userEntity.getRoles()
                 .stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        return user.getPasswordHash();
+        return userEntity.getPasswordHash();
     }
 
     @Override
     public String getUsername() {
-        return user.getNeptunCode();
+        return userEntity.getNeptunCode();
     }
 
     @Override
