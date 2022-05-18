@@ -9,6 +9,7 @@ import hu.nemaberci.budgetneptun.repository.ExamResultRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -21,15 +22,18 @@ public class ExamService {
     private final ExamRepository examRepository;
     private final UserService userService;
     private final ExamResultRepository examResultRepository;
+    private final Consumer<ExamEntity> examEntityChangedCallback;
 
     public ExamService(
             ExamRepository examRepository,
             UserService userService,
-            ExamResultRepository examResultRepository
+            ExamResultRepository examResultRepository,
+            Consumer<ExamEntity> examEntityChangedCallback
     ) {
         this.examRepository = examRepository;
         this.userService = userService;
         this.examResultRepository = examResultRepository;
+        this.examEntityChangedCallback = examEntityChangedCallback;
     }
 
     public ExamDTO create(
@@ -71,12 +75,33 @@ public class ExamService {
         exam.setCapacity(capacity);
         exam.setDescription(description);
 
+        examEntityChangedCallback.accept(exam);
+
         return ExamDTO.fromEntity(examRepository.save(exam));
 
     }
 
     public List<ExamDTO> getAll() {
         return examRepository.findAll().stream()
+                .map(ExamDTO::fromEntity).collect(Collectors.toList());
+    }
+
+    public List<ExamDTO> getAllForCourses(List<Long> courseIds) {
+        return examRepository.findAllByCourse_IdIn(courseIds).stream()
+                .map(ExamDTO::fromEntity).collect(Collectors.toList());
+    }
+
+    public List<ExamDTO> getAllForCoursesWithStudent(List<Long> courseIds, Long studentId) {
+        return examRepository.findAllByCourse_IdIn(courseIds).stream()
+                .filter(exam -> exam.getAttendants().stream()
+                        .anyMatch(attendant -> attendant.getId().equals(studentId)))
+                .map(ExamDTO::fromEntity).collect(Collectors.toList());
+    }
+
+    public List<ExamDTO> getAllForCoursesWithoutStudent(List<Long> courseIds, Long studentId) {
+        return examRepository.findAllByCourse_IdIn(courseIds).stream()
+                .filter(exam -> exam.getAttendants().stream()
+                        .noneMatch(attendant -> attendant.getId().equals(studentId)))
                 .map(ExamDTO::fromEntity).collect(Collectors.toList());
     }
 
@@ -107,6 +132,8 @@ public class ExamService {
         exam.getAttendants()
                 .add(student);
 
+        examEntityChangedCallback.accept(exam);
+
         return ExamDTO.fromEntity(examRepository.save(exam));
 
     }
@@ -129,7 +156,16 @@ public class ExamService {
         exam.getAttendants()
                 .remove(student);
 
+        examEntityChangedCallback.accept(exam);
+
         return ExamDTO.fromEntity(examRepository.save(exam));
+    }
+
+    public List<ExamResultDTO> resultsOfExam(
+            Long examId
+    ) {
+        return examResultRepository.findAllByExam_Id(examId)
+                .stream().map(ExamResultDTO::fromEntity).collect(Collectors.toList());
     }
 
     public ExamResultDTO evaluateExam(
@@ -140,44 +176,22 @@ public class ExamService {
             Integer points
     ) {
         final var student = userService.getStudent(studentId);
-        final var exam = examRepository.getById(examId);
         final var teacher = userService.getTeacher(teacherId);
+        final var exam = examRepository.getById(examId);
 
-        return ExamResultDTO.fromEntity(
-                examResultRepository.save(
+        ExamResultEntity examResult = examResultRepository.findByStudentAndTeacher(student, teacher)
+                .orElse(
                         new ExamResultEntity()
                                 .setExam(exam)
-                                .setComment(comment)
-                                .setPoints(points)
                                 .setStudent(student)
                                 .setTeacher(teacher)
                 )
-        );
-
-    }
-
-    public ExamResultDTO updateEvaluation(
-            Long id,
-            Long examId,
-            Long studentId,
-            Long teacherId,
-            String comment,
-            Integer points
-    ) {
-
-        final var student = userService.getStudent(studentId);
-        final var exam = examRepository.getById(examId);
-        final var teacher = userService.getTeacher(teacherId);
-        final var examResult = examResultRepository.getById(id);
+                .setComment(comment)
+                .setPoints(points);
 
         return ExamResultDTO.fromEntity(
                 examResultRepository.save(
                         examResult
-                                .setExam(exam)
-                                .setComment(comment)
-                                .setPoints(points)
-                                .setStudent(student)
-                                .setTeacher(teacher)
                 )
         );
 

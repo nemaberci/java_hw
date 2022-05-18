@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Exams</title>
+</head>
+<body>
+
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container p-6">
+
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+
+        <thead>
+
+        <tr>
+            <th>
+                Course name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Open spaces
+            </th>
+            <th>
+                Actions
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <tr th:each="exam : ${exams}" th:id="|exam-${exam.id}|">
+            <td th:text="${exam.courseName}">
+                Mathematics 1
+            </td>
+            <td th:text="${exam.description}">
+                Good subject
+            </td>
+            <td th:text="${exam.time}">
+                July 11
+            </td>
+            <td th:text="(${exam.capacity} - ${exam.attendantIds.size()})"
+                th:id="|exam-capacity-${exam.id}|">
+                10
+            </td>
+            <td>
+                <button class="button is-success" th:id="|exam-apply-${exam.id}|"
+                        th:style="|display: ${exam.attendantIds.contains(userId)? 'none' : 'inline-flex'}|"
+                        th:onclick="|applyToExam(${exam.id})|">Apply
+                </button>
+                <button class="button is-danger" th:id="|exam-leave-${exam.id}|"
+                        th:style="|display: ${exam.attendantIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|leaveExam(${exam.id})|">Leave
+                </button>
+                <button class="button is-info" th:if="${exam.teacherIds.contains(userId)}"
+                        th:onclick="|updateExam(${exam.id})|">Update
+                </button>
+                <button class="button is-danger" th:if="${exam.teacherIds.contains(userId)}"
+                        th:onclick="|deleteExam(${exam.id})|">Delete
+                </button>
+                <button class="button is-primary"
+                        th:id="|add-student-${exam.id}|"
+                        th:style="|display: ${exam.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|addStudent(${exam.id})|">Add student
+                </button>
+                <button class="button is-warning"
+                        th:id="|remove-student-${exam.id}|"
+                        th:style="|display: ${exam.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|removeStudent(${exam.id})|">Remove student
+                </button>
+                <button class="button is-link"
+                        th:id="|add-student-${exam.id}|"
+                        th:style="|display: ${exam.teacherIds.contains(userId)? 'inline-flex' : 'none'}|"
+                        th:onclick="|review(${exam.id})|">Review
+                </button>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/stomp-js/stomp-websocket/lib/stomp.js"></script>
+<script type="text/javascript" th:src="@{/js/exams.js}"></script>
+
+</body>
+</html>

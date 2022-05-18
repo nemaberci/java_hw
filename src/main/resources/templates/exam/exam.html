@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Exam</title>
+</head>
+<body>
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container p-6">
+    <form method="post">
+        <div class="field">
+            <label class="label" for="description">Description</label>
+            <div class="control">
+                <input class="input" type="text" placeholder="Description" name="description" id="description" th:value="${exam != null ? exam.description : ''}">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" for="time">Time</label>
+            <div class="control">
+                <input class="input" type="datetime-local" placeholder="Time" name="time" id="time" th:value="${exam != null ? exam.timeString : ''}">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" for="capacity">Capacity</label>
+            <div class="control">
+                <input class="input" type="number" placeholder="Capacity" name="capacity" id="capacity" th:value="${exam != null ? exam.capacity : ''}">
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-link" th:text="${exam != null ? 'Update' : 'Create'}">Do</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

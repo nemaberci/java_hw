@@ -34,7 +34,7 @@ public class CourseEntity {
     @ManyToMany
     private List<UserEntity> students;
 
-    @OneToMany
+    @OneToMany(mappedBy = "course")
     private List<ExamEntity> exams;
 
 }

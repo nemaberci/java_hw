@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Exam results</title>
+</head>
+<body>
+
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container p-6">
+
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+
+        <thead>
+
+        <tr>
+            <th>
+                Course name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Points
+            </th>
+            <th>
+                Comment
+            </th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+        <tr th:each="result : ${results}">
+            <td th:text="${result.courseName}">
+                Mathematics 1
+            </td>
+            <td th:text="${result.examDescription}">
+                Good subject
+            </td>
+            <td th:text="${result.examTime}">
+                July 11
+            </td>
+            <td th:text="${result.points}">
+                10
+            </td>
+            <td th:text="${result.comment}">
+                Good work!
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

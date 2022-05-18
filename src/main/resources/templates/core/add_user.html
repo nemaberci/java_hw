@@ -11,7 +11,6 @@
 
 <div class="container is-fullwidth is-fullheight p-6">
 
-
     <h2 th:text="${remove ? 'Remove student' : 'Add student'}">Add or remove students</h2>
 
     <div class="select py-4 is-fullwidth">
@@ -27,7 +26,9 @@
                     </div>
                 </div>
                 <div class="control">
-                    <button type="submit" class="button is-primary" th:text="${remove ? 'Remove' : 'Add'}">Choose</button>
+                    <button type="submit" class="button is-primary"
+                            th:text="${remove ? 'Remove' : 'Add'}">Choose
+                    </button>
                 </div>
             </div>
 

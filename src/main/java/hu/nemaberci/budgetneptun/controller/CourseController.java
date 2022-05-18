@@ -1,15 +1,9 @@
 package hu.nemaberci.budgetneptun.controller;
 
-import hu.nemaberci.budgetneptun.dto.CourseDTO;
-import hu.nemaberci.budgetneptun.dto.UserDTO;
 import hu.nemaberci.budgetneptun.service.CourseService;
 import hu.nemaberci.budgetneptun.service.UserService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -85,7 +79,7 @@ public class CourseController {
         model.addAttribute("users", students);
         model.addAttribute("course", course);
         model.addAttribute("remove", false);
-        return "course/add_to_course";
+        return "core/add_user";
     }
 
     @GetMapping("/removestudent/{id}")
@@ -97,7 +91,7 @@ public class CourseController {
         model.addAttribute("users", students);
         model.addAttribute("course", course);
         model.addAttribute("remove", true);
-        return "course/add_to_course";
+        return "core/add_user";
     }
 
     @PostMapping("/addstudent/{id}")

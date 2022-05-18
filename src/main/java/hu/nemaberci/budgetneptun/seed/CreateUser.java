@@ -107,6 +107,7 @@ public class CreateUser {
                                 .setTime(LocalDateTime.now().plusDays(1))
                                 .setAttendants(new ArrayList<>())
                                 .setDescription("Casual exam")
+                                .setCourse(courses.get(0))
                 )
         );
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Review exam</title>
+</head>
+<body>
+
+<nav th:insert="fragment/nav"></nav>
+
+<div class="container is-fullwidth is-fullheight p-6">
+
+    <h2>Review exam</h2>
+
+    <div class="select py-4 is-fullwidth">
+        <form method="post">
+
+            <div class="field has-addons">
+                <div class="control px-3 is-expanded">
+                    <label class="label" for="studentId">Student</label>
+                    <div class="select is-fullwidth">
+                        <select name="studentId" required id="studentId">
+                            <option th:each="user : ${students}"
+                                    th:text="${user.neptunCode}" th:value="${user.id}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="comment">Comment</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Comment" name="comment" id="comment">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="points">Points</label>
+                    <div class="control">
+                        <input class="input" type="number" placeholder="Points" name="points" id="points">
+                    </div>
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-primary">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+</body>
+</html>

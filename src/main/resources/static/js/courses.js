@@ -72,13 +72,6 @@ function connect() {
     });
 }
 
-function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    console.log("Disconnected");
-}
-
 function addStudent(courseId) {
     document.location.href=`/course/addstudent/${courseId}`
 }

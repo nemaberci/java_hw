@@ -19,7 +19,7 @@
         Home
       </a>
 
-      <div class="navbar-item has-dropdown is-hoverable">
+      <div class="navbar-item has-dropdown is-hoverable" sec:authorize="isAuthenticated() && (hasRole('ROLE_TEACHER') || hasRole('ROLE_STUDENT'))">
         <a class="navbar-link">
           Course
         </a>
@@ -36,6 +36,27 @@
           </a>
           <a class="navbar-item" th:href="@{/course/new}" sec:authorize="isAuthenticated() && hasRole('ROLE_TEACHER')">
             New course
+          </a>
+        </div>
+      </div>
+
+      <div class="navbar-item has-dropdown is-hoverable" sec:authorize="isAuthenticated() && (hasRole('ROLE_TEACHER') || hasRole('ROLE_STUDENT'))">
+        <a class="navbar-link">
+          Exam
+        </a>
+
+        <div class="navbar-dropdown">
+          <a class="navbar-item" th:href="@{/exam/mine}">
+            My exams
+          </a>
+          <a class="navbar-item" th:href="@{/exam/apply}">
+            Apply to an exam
+          </a>
+          <a class="navbar-item" th:href="@{/exam/results}">
+            Exam results
+          </a>
+          <a class="navbar-item" th:href="@{/exam/new}" sec:authorize="isAuthenticated() && hasRole('ROLE_TEACHER')">
+            New exam
           </a>
         </div>
       </div>
