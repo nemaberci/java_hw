@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -109,6 +110,14 @@ public class ExamService {
         return ExamDTO.fromEntity(examRepository.getById(id));
     }
 
+    private boolean requestByTeacher() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .anyMatch(
+                        grantedAuthority -> grantedAuthority.getAuthority()
+                                .equals(UserService.roleTeacher)
+                );
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public ExamDTO applyToExam(
             Long examId,
@@ -117,7 +126,7 @@ public class ExamService {
         final var student = userService.getStudent(studentId);
         final var exam = examRepository.getById(examId);
 
-        if (exam.getAttendants().size() + 1 > exam.getCapacity()) {
+        if (exam.getAttendants().size() + 1 > exam.getCapacity() && !requestByTeacher()) {
             throw new IllegalArgumentException("Exam full");
         }
 
