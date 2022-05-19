@@ -82,12 +82,14 @@ public class ExamController {
 
     @GetMapping("/update/{id}")
     public String updateExam(Model model, @PathVariable Long id) {
+        model.addAttribute("courses", courseService.getAll());
         model.addAttribute("exam", examService.getById(id));
         return "exam/exam";
     }
 
     @GetMapping("/new")
     public String newExam(Model model) {
+        model.addAttribute("courses", courseService.getAll());
         return "exam/exam";
     }
 
@@ -96,6 +98,7 @@ public class ExamController {
         examService.create(
                 body.get("description"),
                 LocalDateTime.parse(body.get("time")),
+                Long.parseLong(body.get("courseId")),
                 Integer.parseInt(body.get("capacity"))
         );
         return "redirect:/exam/mine";
@@ -151,6 +154,7 @@ public class ExamController {
                 id,
                 body.get("description"),
                 LocalDateTime.parse(body.get("time")),
+                Long.parseLong(body.get("courseId")),
                 Integer.parseInt(body.get("capacity"))
         );
         return "redirect:/exam/mine";

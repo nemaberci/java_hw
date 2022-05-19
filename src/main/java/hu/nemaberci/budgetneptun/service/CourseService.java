@@ -30,6 +30,15 @@ public class CourseService {
     }
 
     public CourseDTO create(String name, String description, Integer capacity) {
+
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity cannot be negative");
+        }
+
+        if (name == null || name.isBlank() || description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Name and description cannot be blank");
+        }
+
         return CourseDTO.fromEntity(
                 courseRepository.save(
                         new CourseEntity()
@@ -54,6 +63,10 @@ public class CourseService {
         if (course.getStudents().size() > capacity) {
             throw new IllegalArgumentException(
                     "Capacity cannot be lower than current student count");
+        }
+
+        if (name == null || name.isBlank() || description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Name and description cannot be blank");
         }
 
         course.setCapacity(capacity);
@@ -172,19 +185,27 @@ public class CourseService {
     public List<CourseDTO> coursesWithoutStudent(
             Long studentId
     ) {
-        final var student = userService.getStudent(studentId);
-        return courseRepository.findAll( ).stream()
-                .filter(course -> !course.getStudents().contains(student))
-                .map(CourseDTO::fromEntity).collect(Collectors.toList());
+        try {
+            final var student = userService.getStudent(studentId);
+            return courseRepository.findAll().stream()
+                    .filter(course -> !course.getStudents().contains(student))
+                    .map(CourseDTO::fromEntity).collect(Collectors.toList());
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     public List<CourseDTO> coursesWithStudent(
             Long studentId
     ) {
-        final var student = userService.getStudent(studentId);
-        return courseRepository.findAll( ).stream()
-                .filter(course -> course.getStudents().contains(student))
-                .map(CourseDTO::fromEntity).collect(Collectors.toList());
+        try {
+            final var student = userService.getStudent(studentId);
+            return courseRepository.findAll().stream()
+                    .filter(course -> course.getStudents().contains(student))
+                    .map(CourseDTO::fromEntity).collect(Collectors.toList());
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
 }

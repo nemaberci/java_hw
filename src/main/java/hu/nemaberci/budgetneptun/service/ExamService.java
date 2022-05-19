@@ -4,6 +4,7 @@ import hu.nemaberci.budgetneptun.dto.ExamDTO;
 import hu.nemaberci.budgetneptun.dto.ExamResultDTO;
 import hu.nemaberci.budgetneptun.entity.ExamEntity;
 import hu.nemaberci.budgetneptun.entity.ExamResultEntity;
+import hu.nemaberci.budgetneptun.repository.CourseRepository;
 import hu.nemaberci.budgetneptun.repository.ExamRepository;
 import hu.nemaberci.budgetneptun.repository.ExamResultRepository;
 import java.time.LocalDateTime;
@@ -22,17 +23,20 @@ public class ExamService {
 
     private final ExamRepository examRepository;
     private final UserService userService;
+    private final CourseRepository courseRepository;
     private final ExamResultRepository examResultRepository;
     private final Consumer<ExamEntity> examEntityChangedCallback;
 
     public ExamService(
             ExamRepository examRepository,
             UserService userService,
+            CourseRepository courseRepository,
             ExamResultRepository examResultRepository,
             Consumer<ExamEntity> examEntityChangedCallback
     ) {
         this.examRepository = examRepository;
         this.userService = userService;
+        this.courseRepository = courseRepository;
         this.examResultRepository = examResultRepository;
         this.examEntityChangedCallback = examEntityChangedCallback;
     }
@@ -40,14 +44,22 @@ public class ExamService {
     public ExamDTO create(
             String description,
             LocalDateTime time,
+            Long courseId,
             Integer capacity
     ) {
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description cannot be blank");
+        }
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity cannot be negative");
+        }
         return ExamDTO.fromEntity(
                 examRepository.save(
                         new ExamEntity()
                                 .setDescription(description)
                                 .setCapacity(capacity)
                                 .setTime(time)
+                                .setCourse(courseRepository.getById(courseId))
                                 .setAttendants(new ArrayList<>())
                 )
         );
@@ -57,6 +69,7 @@ public class ExamService {
             Long id,
             String description,
             LocalDateTime time,
+            Long courseId,
             Integer capacity
     ) {
 
@@ -67,6 +80,10 @@ public class ExamService {
             throw new IllegalArgumentException("The exam cannot happen in the past");
         }
 
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description cannot be blank");
+        }
+
         if (exam.getAttendants().size() > capacity) {
             throw new IllegalArgumentException(
                     "Capacity cannot be lower than current attendant count");
@@ -75,6 +92,7 @@ public class ExamService {
         exam.setTime(time);
         exam.setCapacity(capacity);
         exam.setDescription(description);
+        exam.setCourse(courseRepository.getById(courseId));
 
         examEntityChangedCallback.accept(exam);
 
@@ -188,7 +206,7 @@ public class ExamService {
         final var teacher = userService.getTeacher(teacherId);
         final var exam = examRepository.getById(examId);
 
-        ExamResultEntity examResult = examResultRepository.findByStudentAndTeacher(student, teacher)
+        ExamResultEntity examResult = examResultRepository.findByStudentAndTeacherAndExam(student, teacher, exam)
                 .orElse(
                         new ExamResultEntity()
                                 .setExam(exam)

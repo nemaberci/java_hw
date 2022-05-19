@@ -19,13 +19,13 @@ public class CourseEntity {
     @Id
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private Integer capacity;
 
     @ManyToMany

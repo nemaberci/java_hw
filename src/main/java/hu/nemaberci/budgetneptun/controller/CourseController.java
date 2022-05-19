@@ -28,23 +28,29 @@ public class CourseController {
 
     private void addModelAttributes(Model model) {
         model.addAttribute("userId", userService.currentUserId());
-        model.addAttribute("courses", courseService.getAll());
     }
 
     @GetMapping("/list")
     public String list(Model model) {
+        model.addAttribute("courses", courseService.getAll());
         this.addModelAttributes(model);
         return "course/courses";
     }
 
     @GetMapping("/mine")
     public String myCourses(Model model) {
+        model.addAttribute("courses", courseService.coursesWithStudent(
+                userService.currentUserId()
+        ));
         this.addModelAttributes(model);
         return "course/courses";
     }
 
     @GetMapping("/apply")
     public String notMyCourses(Model model) {
+        model.addAttribute("courses", courseService.coursesWithoutStudent(
+                userService.currentUserId()
+        ));
         this.addModelAttributes(model);
         return "course/courses";
     }

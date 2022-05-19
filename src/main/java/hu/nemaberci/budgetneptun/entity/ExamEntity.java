@@ -21,19 +21,19 @@ public class ExamEntity {
     @Id
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime time;
 
-    @Column
+    @Column(nullable = false)
     private Integer capacity;
 
     @ManyToMany
     private List<UserEntity> attendants;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private CourseEntity course;
 
 }

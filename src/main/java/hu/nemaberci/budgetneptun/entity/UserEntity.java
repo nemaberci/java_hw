@@ -19,10 +19,10 @@ public class UserEntity {
     @Id
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String neptunCode;
 
-    @Column
+    @Column(nullable = false)
     private String passwordHash;
 
     @ElementCollection(fetch = FetchType.EAGER)

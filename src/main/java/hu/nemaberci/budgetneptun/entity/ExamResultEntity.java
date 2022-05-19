@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @Table(
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"student_id", "teacher_id"})
+                @UniqueConstraint(columnNames = {"student_id", "teacher_id", "exam_id"})
         }
 )
 public class ExamResultEntity {
@@ -25,20 +25,21 @@ public class ExamResultEntity {
     @Id
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String comment;
 
-    @Column
+    @Column(nullable = false)
     private Integer points;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "exam_id")
     private ExamEntity exam;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "student_id")
     private UserEntity student;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "teacher_id")
     private UserEntity teacher;
 
